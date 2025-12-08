@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Christmas Mystery 2024</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Snowflakes background animation */
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 1.5em;
+            animation: fall linear infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Home Page Styles */
+        .home-content {
+            text-align: center;
+        }
+
+        .mystery-box {
+            width: 200px;
+            height: 200px;
+            margin: 30px auto;
+            background: linear-gradient(45deg, #ff4757, #ff6348);
+            border-radius: 20px;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .mystery-box::before {
+            content: '?';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 100px;
+            font-weight: bold;
+            color: rgba(255,255,255,0.3);
+        }
+
+        .ribbon {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 100%;
+            background: #ffd700;
+        }
+
+        .ribbon::after {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 40px;
+            background: #ffd700;
+            border-radius: 50%;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+            letter-spacing: 2px;
+        }
+
+        .good-luck {
+            font-size: 1.8em;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-top: 20px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Puzzle Pages Common Styles */
+        .puzzle-container {
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .puzzle-title {
+            font-size: 2em;
+            margin-bottom: 30px;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .puzzle-hint {
+            font-size: 1.1em;
+            color: #a8dadc;
+            margin-bottom: 20px;
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        /* Page 1: Banana Puzzle */
+        .code-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 15px;
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        .hidden-code {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scaleY(2);
+            font-size: 120px;
+            font-weight: bold;
+            color: #ff4757;
+            text-shadow: 4px 4px 8px rgba(0,0,0,0.8);
+            z-index: 1;
+            letter-spacing: 10px;
+            line-height: 1;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .banana {
+            position: absolute;
+            font-size: 60px;
+            cursor: grab;
+            z-index: 2;
+            user-select: none;
+            transition: transform 0.1s;
+        }
+
+        .banana:active {
+            cursor: grabbing;
+            transform: scale(1.1);
+        }
+
+        /* Page 2: Dot Counting Puzzle */
+        .dots-container {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 15px;
+            overflow: hidden;
+            touch-action: none;
+            margin-bottom: 20px;
+        }
+
+        .dot {
+            position: absolute;
+            border-radius: 50%;
+            cursor: grab;
+            user-select: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: transform 0.1s;
+        }
+
+        .dot:active {
+            cursor: grabbing;
+            transform: scale(1.1);
+            z-index: 1000 !important;
+        }
+
+        .color-legend {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .legend-item {
+            background: rgba(0,0,0,0.3);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 1.1em;
+        }
+
+        .legend-dot {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        /* Page 3: Success Page */
+        .success-container {
+            text-align: center;
+            animation: celebrateIn 1s ease-out;
+        }
+
+        @keyframes celebrateIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8) rotate(-5deg);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        .trophy {
+            font-size: 150px;
+            margin: 30px 0;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-30px); }
+        }
+
+        .success-message {
+            font-size: 2em;
+            color: #ffd700;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .final-clue {
+            font-size: 1.5em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            border-radius: 15px;
+            line-height: 1.6;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #ffd700;
+            animation: confettiFall 3s linear infinite;
+            z-index: 9999;
+        }
+
+        @keyframes confettiFall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2em; }
+            .puzzle-title { font-size: 1.5em; }
+            .hidden-code { font-size: 80px; }
+            .banana { font-size: 50px; }
+            .dots-container { height: 400px; }
+            .trophy { font-size: 100px; }
+            .success-message { font-size: 1.5em; }
+            .final-clue { font-size: 1.2em; padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Snowflakes -->
+    <div id="snowflakes"></div>
+    
+    <!-- Main Container -->
+    <div class="container" id="app"></div>
+
+    <script>
+        // Create snowflakes
+        function createSnowflakes() {
+            const container = document.getElementById('snowflakes');
+            for (let i = 0; i < 20; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.textContent = '❄';
+                snowflake.style.left = Math.random() * 100 + '%';
+                snowflake.style.animationDuration = (Math.random() * 3 + 5) + 's';
+                snowflake.style.animationDelay = Math.random() * 5 + 's';
+                snowflake.style.fontSize = (Math.random() * 1 + 1) + 'em';
+                container.appendChild(snowflake);
+            }
+        }
+        createSnowflakes();
+
+        // Simple routing
+        const routes = {
+            '/': homePage,
+            '/5rt2z': page1,
+            '/j7ln9': page2,
+            '/4qxc6': page3
+        };
+
+        function navigate() {
+            const path = window.location.hash.slice(1) || '/';
+            const page = routes[path] || homePage;
+            document.getElementById('app').innerHTML = '';
+            page();
+        }
+
+        window.addEventListener('hashchange', navigate);
+        window.addEventListener('load', navigate);
+
+        // Home Page
+        function homePage() {
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <div class="home-content">
+                    <h1>🎄 MERRY CHRISTMAS OLIVER! 🎄</h1>
+                    <div class="mystery-box">
+                        <div class="ribbon"></div>
+                    </div>
+                    <p class="good-luck">Good Luck!!</p>
+                </div>
+            `;
+        }
+
+        // Page 1: Banana Puzzle
+        function page1() {
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <div class="puzzle-container">
+                    <div class="code-container" id="codeContainer">
+                        <div class="hidden-code">CRASH</div>
+                    </div>
+                </div>
+            `;
+
+            const container = document.getElementById('codeContainer');
+            const containerRect = container.getBoundingClientRect();
+            
+            // Create 50 bananas at random positions
+            for (let i = 0; i < 300; i++) {
+                const banana = document.createElement('div');
+                banana.className = 'banana';
+                banana.textContent = '🍌';
+                banana.style.left = Math.random() * (containerRect.width - 60) + 'px';
+                banana.style.top = Math.random() * (containerRect.height - 60) + 'px';
+                
+                makeDraggable(banana, container);
+                container.appendChild(banana);
+            }
+        }
+
+        // Page 2: Dot Counting Puzzle
+        function page2() {
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <div class="puzzle-container">
+                    <div class="dots-container" id="dotsContainer"></div>
+                </div>
+            `;
+
+            const container = document.getElementById('dotsContainer');
+            const containerRect = container.getBoundingClientRect();
+            
+            const dotConfig = [
+                { color: '#3498db', count: 3, sizes: [20, 150, 250] },
+                { color: '#e74c3c', count: 7, sizes: [35, 45, 40, 50, 200, 200, 200] },
+                { color: '#f1c40f', count: 9, sizes: [20, 20, 20, 20, 20, 20, 20, 20, 20] },
+                { color: '#2ecc71', count: 5, sizes: [20, 20, 200, 200, 250] }
+            ];
+
+            let zIndex = 1;
+            
+            dotConfig.forEach(config => {
+                for (let i = 0; i < config.count; i++) {
+                    const dot = document.createElement('div');
+                    dot.className = 'dot';
+                    const size = config.sizes[i];
+                    dot.style.width = size + 'px';
+                    dot.style.height = size + 'px';
+                    dot.style.background = config.color;
+                    dot.style.left = Math.random() * (containerRect.width - size) + 'px';
+                    dot.style.top = Math.random() * (containerRect.height - size) + 'px';
+                    dot.style.zIndex = zIndex++;
+                    
+                    makeDraggable(dot, container);
+                    container.appendChild(dot);
+                }
+            });
+        }
+
+        // Page 3: Success Page
+        function page3() {
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <div class="success-container">
+                    <h2 class="success-message">🎉 CONGRATULATIONS! 🎉</h2>
+                    <div class="trophy">🏆</div>
+                    <div class="final-clue">
+                        The key to your present is in<br>
+                        <strong>the secret drawer in your room!</strong>
+                    </div>
+                </div>
+            `;
+
+            // Create confetti
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.background = ['#ff4757', '#ffd700', '#3498db', '#2ecc71', '#9b59b6'][Math.floor(Math.random() * 5)];
+                    confetti.style.animationDelay = Math.random() * 2 + 's';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 50);
+            }
+        }
+
+        // Drag functionality for touch and mouse
+        function makeDraggable(element, container) {
+            let isDragging = false;
+            let currentX;
+            let currentY;
+            let initialX;
+            let initialY;
+            let xOffset = 0;
+            let yOffset = 0;
+
+            element.addEventListener('mousedown', dragStart);
+            element.addEventListener('touchstart', dragStart, { passive: false });
+            
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('touchmove', drag, { passive: false });
+            
+            document.addEventListener('mouseup', dragEnd);
+            document.addEventListener('touchend', dragEnd);
+
+            function dragStart(e) {
+                if (e.type === 'touchstart') {
+                    initialX = e.touches[0].clientX - xOffset;
+                    initialY = e.touches[0].clientY - yOffset;
+                } else {
+                    initialX = e.clientX - xOffset;
+                    initialY = e.clientY - yOffset;
+                }
+
+                if (e.target === element) {
+                    isDragging = true;
+                    element.style.zIndex = 1000;
+                }
+            }
+
+            function drag(e) {
+                if (isDragging) {
+                    e.preventDefault();
+                    
+                    if (e.type === 'touchmove') {
+                        currentX = e.touches[0].clientX - initialX;
+                        currentY = e.touches[0].clientY - initialY;
+                    } else {
+                        currentX = e.clientX - initialX;
+                        currentY = e.clientY - initialY;
+                    }
+
+                    xOffset = currentX;
+                    yOffset = currentY;
+
+                    setTranslate(currentX, currentY, element);
+                }
+            }
+
+            function dragEnd(e) {
+                if (isDragging) {
+                    initialX = currentX;
+                    initialY = currentY;
+                    isDragging = false;
+                }
+            }
+
+            function setTranslate(xPos, yPos, el) {
+                el.style.transform = `translate(${xPos}px, ${yPos}px)`;
+            }
+        }
+    </script>
+</body>
+</html>
