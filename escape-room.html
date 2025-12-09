@@ -120,6 +120,57 @@
             animation: pulse 2s ease-in-out infinite;
         }
 
+        /* Optional image replacement for mystery box */
+        #mysteryImage {
+            width: 200px;
+            height: 200px;
+            margin: 30px auto;
+            border-radius: 20px;
+            object-fit: cover;
+            display: none; /* show only if image loads */
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .mystery-box.hidden {
+            display: none !important;
+        }
+
+        /* Code entry on home page */
+        .code-entry {
+            margin-top: 30px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .code-entry input {
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: none;
+            width: 220px;
+            font-size: 1em;
+            outline: none;
+        }
+
+        .code-entry button {
+            padding: 12px 18px;
+            background: #ffd700;
+            color: #0b0b0b;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+        }
+
+        .code-message {
+            margin-top: 10px;
+            color: #ffcccb;
+            font-size: 0.95em;
+            text-align: center;
+        }
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.7; }
@@ -346,6 +397,13 @@
             '/4qxc6': page3
         };
 
+        // Map user-entered codes (case-insensitive) to route paths
+        const codeMap = {
+            '5rt2z': '/5rt2z',
+            'j7ln9': '/j7ln9',
+            '4qxc6': '/4qxc6'
+        };
+
         function navigate() {
             const path = window.location.hash.slice(1) || '/';
             const page = routes[path] || homePage;
@@ -362,12 +420,80 @@
             app.innerHTML = `
                 <div class="home-content">
                     <h1>🎄 MERRY CHRISTMAS OLIVER! 🎄</h1>
+
+                    <img id="mysteryImage" src="mystery.png" alt="Mystery Box" />
+
+                    <!-- Original CSS mystery box (kept for fallback) -->
                     <div class="mystery-box">
                         <div class="ribbon"></div>
                     </div>
+
                     <p class="good-luck">Good Luck!!</p>
+
+                    <div class="code-entry">
+                        <input id="codeInput" type="text" placeholder="Enter code..." aria-label="Enter code" />
+                        <button id="codeSubmit">Go</button>
+                    </div>
+                    <p id="codeMessage" class="code-message" aria-live="polite"></p>
                 </div>
             `;
+
+            // If the image loads successfully, show it and hide the CSS mystery box.
+            const imgEl = document.getElementById('mysteryImage');
+            const boxEl = document.querySelector('.mystery-box');
+
+            if (imgEl) {
+                imgEl.addEventListener('load', () => {
+                    imgEl.style.display = 'block';
+                    if (boxEl) boxEl.classList.add('hidden');
+                });
+
+                imgEl.addEventListener('error', () => {
+                    // Keep the CSS box visible if image isn't present or fails
+                    imgEl.style.display = 'none';
+                    if (boxEl) boxEl.classList.remove('hidden');
+                });
+            }
+
+            // Helper to normalize input (strip #, / and whitespace, lowercase)
+            function normalizeCode(raw) {
+                return raw.replace(/[#\/\s]/g, '').toLowerCase();
+            }
+
+            function showMessage(text, isError = true) {
+                const msg = document.getElementById('codeMessage');
+                msg.textContent = text;
+                msg.style.color = isError ? '#ffcccb' : '#b7f5c7';
+            }
+
+            function submitCode() {
+                const input = document.getElementById('codeInput');
+                const raw = input.value || '';
+                const key = normalizeCode(raw);
+
+                if (!key) {
+                    showMessage('Please enter a code.');
+                    return;
+                }
+
+                // Directly accept full route values like '/5rt2z' or '5rt2z'
+                const mapped = codeMap[key];
+                if (mapped) {
+                    // Navigate by updating the hash so routing handles it
+                    window.location.hash = '#' + mapped;
+                    return;
+                }
+
+                showMessage('Code not recognized. Try again.');
+            }
+
+            const submitBtn = document.getElementById('codeSubmit');
+            const codeInput = document.getElementById('codeInput');
+            submitBtn.addEventListener('click', submitCode);
+            codeInput.addEventListener('keyup', (e) => {
+                if (e.key === 'Enter') submitCode();
+            });
+            codeInput.focus();
         }
 
         // Page 1: Banana Puzzle
