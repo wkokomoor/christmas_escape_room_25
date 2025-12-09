@@ -1,7 +1,8 @@
 FROM nginx:alpine
 
-# Copy the HTML file
+# Copy the HTML file and PNG image
 COPY escape-room.html /usr/share/nginx/html/index.html
+COPY mystery.png /usr/share/nginx/html/mystery.png
 
 # Create a custom nginx config that listens on $PORT (8080)
 RUN echo 'server { \
